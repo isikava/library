@@ -11,19 +11,45 @@
     <script src="js/app.js" defer></script>
   </head>
   <body>
-    <header class="header shadow-sm mb-4">
-      <div class="container py-4">
+    <header class="header shadow-sm mb-4 py-4">
+      <div class="container">
         <h1 class="fw-bold mb-0">Library</h1>
       </div>
     </header>
-    <main class="container">
+    <main class="container text-center">
       <button
-        class="btn btn-outline-dark"
+        class="btn btn-lg btn-outline-dark mb-4"
         data-bs-toggle="modal"
         data-bs-target="#addBookModal"
       >
         + Add Book
       </button>
+      <div class="cards-grid">
+        <div class="card rounded-3 shadow-sm">
+          <div class="card-body fs-5">
+            <h3 class="card-title">Title</h3>
+            <p>Author</p>
+            <p>Pages</p>
+            <span>Status:</span>
+          </div>
+          <div class="card-footer">
+            <input
+              type="checkbox"
+              class="btn-check"
+              id="btn-check-outlined"
+              autocomplete="off"
+            />
+            <label
+              class="w-100 mb-3 btn btn-lg btn-outline-success"
+              for="btn-check-outlined"
+              >Read</label
+            ><br />
+            <button type="button" class="w-100 btn btn-lg btn-secondary">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
     <div
       class="modal modal-sheet fade"
@@ -35,7 +61,7 @@
         <div class="modal-content">
           <div class="modal-body text-center">
             <h1 class="fs-4 mb-3">Add new Book</h1>
-            <form id="addBookForm" class="d-flex flex-column gap-4">
+            <form id="addBookForm" class="d-flex flex-column gap-4 fs-5">
               <input
                 type="text"
                 class="form-control form-control-lg"
@@ -46,6 +72,22 @@
                 class="form-control form-control-lg"
                 placeholder="Author"
               />
+              <input
+                type="number"
+                class="form-control form-control-lg"
+                placeholder="Pages"
+              />
+              <div class="form-check text-start">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckDefault"
+                />
+                <label class="form-check-label" for="flexCheckDefault">
+                  Have you read it?
+                </label>
+              </div>
               <button type="button" class="btn btn-lg btn-primary w-100 mx-0">
                 Save
               </button>
