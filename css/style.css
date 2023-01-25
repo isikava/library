@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  --bs-body-font-family: 'Poppins', sans-serif;
+}
+
+.modal-sheet .modal-dialog {
+  max-width: 380px;
+  transition: bottom 0.75s ease-in-out;
+}
