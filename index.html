@@ -66,31 +66,31 @@
                 type="text"
                 class="form-control form-control-lg"
                 placeholder="Title"
+                id="title"
+                name="title"
+                required
               />
               <input
                 type="text"
                 class="form-control form-control-lg"
                 placeholder="Author"
+                id="author"
+                name="author"
               />
               <input
                 type="number"
                 class="form-control form-control-lg"
                 placeholder="Pages"
+                id="pages"
+                name="pages"
               />
               <div class="form-check text-start">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="flexCheckDefault"
-                />
-                <label class="form-check-label" for="flexCheckDefault">
+                <input class="form-check-input" type="checkbox" id="isRead" />
+                <label class="form-check-label" for="isRead">
                   Have you read it?
                 </label>
               </div>
-              <button type="button" class="btn btn-lg btn-primary w-100 mx-0">
-                Save
-              </button>
+              <button class="btn btn-lg btn-primary w-100 mx-0">Save</button>
             </form>
           </div>
         </div>
