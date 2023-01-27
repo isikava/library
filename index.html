@@ -24,24 +24,27 @@
       >
         + Add Book
       </button>
-      <div class="cards-grid">
+      <div class="cards-grid"></div>
+      <template>
         <div class="card rounded-3 shadow-sm">
           <div class="card-body fs-5">
             <h3 class="card-title">Title</h3>
             <p>Author</p>
             <p>Pages</p>
-            <span>Status:</span>
+            <span>Status: <span class="isRead">Read</span></span>
           </div>
           <div class="card-footer bg-transparent border-top-0">
             <input
               type="checkbox"
               class="btn-check"
-              id="btn-check-outlined"
+              id="btn-check"
+              value="isRead"
               autocomplete="off"
+              data-toggle=""
             />
             <label
               class="w-100 mb-3 btn btn-lg btn-outline-success"
-              for="btn-check-outlined"
+              for="btn-check"
               >Read</label
             ><br />
             <button
@@ -53,7 +56,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </template>
     </main>
     <div
       class="modal modal-sheet fade"

@@ -7,6 +7,10 @@ function Book(title, author, pages, isRead) {
   this.isRead = isRead;
 }
 
+Book.prototype.toggleRead = function () {
+  this.isRead = !this.isRead;
+};
+
 function addBook(book) {
   if (!book) return;
   myLibrary.push(book);
@@ -16,8 +20,18 @@ function removeBook(index) {
   myLibrary.splice(index, 1);
 }
 
-const book1 = new Book('Witcher', 'A. Sapkovsky', 123, false);
-const book2 = new Book('Headfirst JS', 'O. Reily', 999, true);
+function toggleReadBook(index) {
+  const book = myLibrary[index];
+  book.toggleRead();
+}
+
+const book1 = new Book(
+  'The Witcher. Sword of Destiny',
+  '	Andrzej Sapkowski',
+  343,
+  false
+);
+const book2 = new Book('Headfirst JS', 'O. Reily', 640, true);
 addBook(book1);
 addBook(book2);
 
@@ -34,19 +48,24 @@ function renderData() {
           <h3 class="card-title">${book.title}</h3>
           <p>by ${book.author}</p>
           <p>Pages: ${book.pages}</p>
-          <span>Status: ${book.isRead ? 'Read' : 'Not read'}</span>
+          <span>Status: <span class="isRead">
+          ${book.isRead ? 'Read' : 'Not read'}</span> 
+          </span>
         </div>
         <div class="card-footer bg-transparent border-top-0">
           <input
             type="checkbox"
             class="btn-check"
-            id="check-${index}"
+            id="btn-check-${index}"
+            value="isRead"
             autocomplete="off"
+            data-toggle="${index}"
+            ${book.isRead ? 'checked' : ''}
           />
           <label
             class="w-100 mb-3 btn btn-lg btn-outline-success"
-            for="check-${index}"
-            >Read</label
+            for="btn-check-${index}"
+            >${book.isRead ? 'Unread' : 'Read'}</label
           ><br />
           <button
             type="button"
@@ -63,17 +82,39 @@ function renderData() {
   booksGrid.innerHTML = html;
 }
 
+/* eslint no-param-reassign: ["error", { "props": false }] */
+function updateText(text, node) {
+  if (!node) return;
+
+  node.textContent = text;
+}
+
+function handleRead(e) {
+  if (e.target.value !== 'isRead') return;
+
+  const cb = e.target;
+  const { checked } = cb;
+  const card = cb.parentElement.parentElement;
+  const span = card.querySelector('span.isRead');
+  updateText(checked ? 'Read' : 'Not read', span);
+
+  const index = +cb.dataset.toggle;
+  toggleReadBook(index);
+
+  const label = card.querySelector(`label[for="btn-check-${index}"]`);
+  updateText(checked ? 'Unread' : 'Read', label);
+}
+
 function handleDelete(e) {
   if (!e.target.dataset.remove) return;
+
   const index = +e.target.dataset.remove;
   removeBook(index);
   renderData();
 }
 
 booksGrid.addEventListener('click', handleDelete);
-
-const btn = document.querySelector('[data-bs-toggle="modal"]');
-// btn.click();
+booksGrid.addEventListener('change', handleRead);
 
 function submitForm(e) {
   e.preventDefault();
@@ -93,3 +134,6 @@ const addBookForm = document.querySelector('#addBookForm');
 addBookForm.addEventListener('submit', submitForm);
 
 renderData();
+
+const btn = document.querySelector('[data-bs-toggle="modal"]');
+btn.click();
