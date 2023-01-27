@@ -1,7 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
+  --c-white: #fffbfb;
+  --c-gray: #f0eef1;
   --bs-body-font-family: 'Poppins', sans-serif;
+  --bs-body-bg: var(--c-gray);
+}
+
+.header {
+  background-color: var(--c-white);
 }
 
 .modal-sheet .modal-dialog {
@@ -13,4 +20,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
+}
+
+.card {
+  --bs-card-bg: var(--c-white);
 }
