@@ -116,9 +116,19 @@ function handleDelete(e) {
 booksGrid.addEventListener('click', handleDelete);
 booksGrid.addEventListener('change', handleRead);
 
+function validateForm(formEl) {
+  const titleInput = formEl.querySelector('#title');
+  titleInput.parentElement.classList.add('was-validated');
+
+  return titleInput.checkValidity();
+}
+
 function submitForm(e) {
   e.preventDefault();
+
   const { target } = e;
+  const isValid = validateForm(target);
+  if (!isValid) return;
 
   const formData = new FormData(target);
   const { title, author, pages } = Object.fromEntries(formData);
@@ -126,11 +136,13 @@ function submitForm(e) {
 
   const book = new Book(title, author, pages, cb.checked);
   addBook(book);
+  // target.reset();
   renderData();
 }
 
 const addBookForm = document.querySelector('#addBookForm');
 
+addBookForm.setAttribute('novalidate', '');
 addBookForm.addEventListener('submit', submitForm);
 
 renderData();

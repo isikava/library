@@ -18,7 +18,7 @@
     </header>
     <main class="container text-center">
       <button
-        class="btn btn-lg btn-outline-dark mb-4"
+        class="btn btn-lg btn-outline-dark mb-4 fw-semibold"
         data-bs-toggle="modal"
         data-bs-target="#addBookModal"
       >
@@ -68,15 +68,22 @@
         <div class="modal-content">
           <div class="modal-body text-center">
             <h1 class="fs-4 mb-3">Add new Book</h1>
-            <form id="addBookForm" class="d-flex flex-column gap-4 fs-5">
-              <input
-                type="text"
-                class="form-control form-control-lg"
-                placeholder="Title"
-                id="title"
-                name="title"
-                required
-              />
+            <form
+              id="addBookForm"
+              class="d-flex flex-column gap-4 fs-5 needs-validation"
+            >
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  placeholder="Title"
+                  id="title"
+                  name="title"
+                  required
+                />
+                <div class="invalid-feedback">Now All We Need Is a Title.</div>
+              </div>
+
               <input
                 type="text"
                 class="form-control form-control-lg"
