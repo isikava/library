@@ -25,12 +25,7 @@ function toggleReadBook(index) {
   book.toggleRead();
 }
 
-const book1 = new Book(
-  'The Witcher. Sword of Destiny',
-  '	Andrzej Sapkowski',
-  343,
-  false
-);
+const book1 = new Book('The Witcher. Sword of Destiny', 'Andrzej Sapkowski', 343, false);
 const book2 = new Book('Headfirst JS', 'O. Reily', 640, true);
 addBook(book1);
 addBook(book2);
@@ -116,9 +111,26 @@ function handleDelete(e) {
 booksGrid.addEventListener('click', handleDelete);
 booksGrid.addEventListener('change', handleRead);
 
+function fakeApi(book) {
+  const response = {
+    status: 'ok',
+    message: 'ok',
+  };
+  const bookIndex = myLibrary.findIndex((el) => el.title === book.title);
+  if (bookIndex >= 0) {
+    response.status = 'error';
+    response.message = 'This Book is already in the library.';
+  }
+
+  return response;
+}
+
 function validateForm(formEl) {
   const titleInput = formEl.querySelector('#title');
+  titleInput.classList.remove('is-invalid');
   titleInput.parentElement.classList.add('was-validated');
+  const feedback = formEl.querySelector('#titleValidation');
+  feedback.textContent = 'Now All We Need Is a Title.';
 
   return titleInput.checkValidity();
 }
@@ -126,17 +138,27 @@ function validateForm(formEl) {
 function submitForm(e) {
   e.preventDefault();
 
-  const { target } = e;
-  const isValid = validateForm(target);
+  const form = e.target;
+  const isValid = validateForm(form);
   if (!isValid) return;
 
-  const formData = new FormData(target);
+  const formData = new FormData(form);
   const { title, author, pages } = Object.fromEntries(formData);
-  const cb = target.querySelector('#isRead');
+  const cb = form.querySelector('#isRead');
 
   const book = new Book(title, author, pages, cb.checked);
+  const response = fakeApi(book);
+  if (response.status === 'error') {
+    const titleInput = form.querySelector('#title');
+    titleInput.classList.add('is-invalid');
+    titleInput.parentElement.classList.remove('was-validated');
+    const feedback = form.querySelector('#titleValidation');
+    feedback.textContent = response.message;
+    return;
+  }
+
   addBook(book);
-  // target.reset();
+  form.reset();
   renderData();
 }
 
