@@ -130,9 +130,18 @@ function validateForm(formEl) {
   titleInput.classList.remove('is-invalid');
   titleInput.parentElement.classList.add('was-validated');
   const feedback = formEl.querySelector('#titleValidation');
-  feedback.textContent = 'Now All We Need Is a Title.';
+  updateText('Now All We Need Is a Title.', feedback);
 
   return titleInput.checkValidity();
+}
+
+function resetForm(form) {
+  const inputs = form.querySelectorAll('.form-control');
+  [...inputs].forEach((input) => {
+    input.parentElement.classList.remove('was-validated');
+    input.classList.remove('is-invalid');
+  });
+  form.reset();
 }
 
 function submitForm(e) {
@@ -145,20 +154,20 @@ function submitForm(e) {
   const formData = new FormData(form);
   const { title, author, pages } = Object.fromEntries(formData);
   const cb = form.querySelector('#isRead');
+  const titleInput = form.querySelector('#title');
 
   const book = new Book(title, author, pages, cb.checked);
   const response = fakeApi(book);
   if (response.status === 'error') {
-    const titleInput = form.querySelector('#title');
     titleInput.classList.add('is-invalid');
     titleInput.parentElement.classList.remove('was-validated');
-    const feedback = form.querySelector('#titleValidation');
-    feedback.textContent = response.message;
+    const titleFeedback = form.querySelector('#titleValidation');
+    updateText(response.message, titleFeedback);
     return;
   }
 
   addBook(book);
-  form.reset();
+  resetForm(form);
   renderData();
 }
 
@@ -168,6 +177,13 @@ addBookForm.setAttribute('novalidate', '');
 addBookForm.addEventListener('submit', submitForm);
 
 renderData();
+
+const modal = document.getElementById('addBookModal');
+const titleInput = document.getElementById('title');
+
+modal.addEventListener('shown.bs.modal', () => {
+  titleInput.focus();
+});
 
 const btn = document.querySelector('[data-bs-toggle="modal"]');
 btn.click();
