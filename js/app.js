@@ -1,7 +1,6 @@
-const myLibrary = [];
-
+/* eslint-disable max-classes-per-file */
 class Book {
-  constructor(title, author, pages, isRead) {
+  constructor({ title, author, pages, isRead }) {
     this.title = title;
     this.author = author;
     this.pages = pages;
@@ -13,31 +12,78 @@ class Book {
   }
 }
 
-function addBook(book) {
-  if (!book) return;
-  myLibrary.push(book);
+class Library {
+  // Initialize library with an optional array of data
+  constructor(dataArr) {
+    if (dataArr) {
+      // map it into an array of Book objects
+      this.books = dataArr.map((book) => new Book(book));
+    } else {
+      this.books = [];
+    }
+  }
+
+  addBook(book) {
+    if (!book) return;
+    this.books.push(book);
+  }
+
+  removeBook(index) {
+    this.books.splice(index, 1);
+  }
+
+  toggleReadBook(index) {
+    const book = this.books[index];
+    book.toggleRead();
+  }
+
+  /**
+   * Converts this model into a simple object for
+   * JSON serialization
+   */
+  toJSON() {
+    return this.books;
+  }
 }
 
-function removeBook(index) {
-  myLibrary.splice(index, 1);
+const defaultData = [
+  {
+    title: 'The Witcher. Sword of Destiny',
+    author: 'Andrzej Sapkowski',
+    pages: 343,
+    isRead: false,
+  },
+  {
+    title: 'Headfirst JS',
+    author: 'O. Reily',
+    pages: 640,
+    isRead: true,
+  },
+  {
+    title: 'Don Quixote',
+    author: 'Miguel de Cervantes',
+    pages: 544,
+  },
+];
+
+// Load saved books from storage
+const data = localStorage.books ? JSON.parse(localStorage.getItem('books')) : defaultData;
+
+// Create a library initializing it with the array
+const library = new Library(data);
+
+// Save to localStorage
+function save() {
+  localStorage.setItem('books', JSON.stringify(library));
 }
 
-function toggleReadBook(index) {
-  const book = myLibrary[index];
-  book.toggleRead();
-}
-
-const book1 = new Book('The Witcher. Sword of Destiny', 'Andrzej Sapkowski', 343, false);
-const book2 = new Book('Headfirst JS', 'O. Reily', 640, true);
-addBook(book1);
-addBook(book2);
-
+// View
 const booksGrid = document.querySelector('.cards-grid');
 
 function renderData() {
   booksGrid.innerHTML = '';
 
-  const html = myLibrary
+  const html = library.books
     .map(
       (book, index) => `
       <div class="card rounded-3 shadow-sm">
@@ -96,7 +142,8 @@ function handleRead(e) {
   updateText(checked ? 'Read' : 'Not read', span);
 
   const index = +cb.dataset.toggle;
-  toggleReadBook(index);
+  library.toggleReadBook(index);
+  save();
 
   const label = card.querySelector(`label[for="btn-check-${index}"]`);
   updateText(checked ? 'Unread' : 'Read', label);
@@ -106,7 +153,8 @@ function handleDelete(e) {
   if (!e.target.dataset.remove) return;
 
   const index = +e.target.dataset.remove;
-  removeBook(index);
+  library.removeBook(index);
+  save();
   renderData();
 }
 
@@ -118,7 +166,7 @@ function fakeApi(book) {
     status: 'ok',
     message: 'ok',
   };
-  const bookIndex = myLibrary.findIndex((el) => el.title === book.title);
+  const bookIndex = library.books.findIndex((el) => el.title === book.title);
   if (bookIndex >= 0) {
     response.status = 'error';
     response.message = 'This Book is already in the library.';
@@ -158,7 +206,7 @@ function submitForm(e) {
   const cb = form.querySelector('#isRead');
   const titleInput = form.querySelector('#title');
 
-  const book = new Book(title, author, pages, cb.checked);
+  const book = new Book({ title, author, pages, isRead: cb.checked });
   const response = fakeApi(book);
   if (response.status === 'error') {
     titleInput.classList.add('is-invalid');
@@ -168,7 +216,9 @@ function submitForm(e) {
     return;
   }
 
-  addBook(book);
+  library.addBook(book);
+  save();
+  console.log(localStorage);
   resetForm(form);
   renderData();
 }
